@@ -46,6 +46,11 @@ client.getPlayer('MrScopes').then(console.log);
 | ------ | ----------- | ------- |
 | simple | Should it not include deaths and matches? | true
 | byUUID | Should it get by UUID instead of username? | false
+```ts
+.getPlayer('MrScopes')
+.getPlayer('MrScopes', { simple: false })
+.getPlayer('649ddc08-5406-4d15-83ab-c00974a7fee7', { byUUID: true, simple: false })
+```
 
 
 <br>
