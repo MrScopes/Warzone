@@ -1,3 +1,5 @@
+import { Player } from "../structures/Player";
+
 export interface OptionsGetPlayer {
     /** If it should get the Player based on their UUID */
     byUUID?: boolean;
@@ -27,6 +29,48 @@ export interface User {
     xp: number;
 }
 
+export interface Map {
+    id: string;
+    name: string;
+    nameLower: string;
+    version: string;
+    gametype: string;
+    __v: number;
+    teams: string[];
+    images: string[];
+    authors: [{
+        _id: string;
+        username: string;
+        uuid: string;
+    }];
+}
+
+export interface Game {
+    match: Match;
+    loadedMap: Map;
+    timeElapsed: string;
+    matchSize: number;
+}
+
+export interface FetchedMatch {
+    match: Match;
+    playersLoaded: Player[];
+    winnersLoaded: Player[];
+    losersLoaded: Player[];
+    playerStats: {
+        _id: string;
+        name: string;
+        uuid: string;
+        kills: number;
+        deaths: number;
+        kdr: string;
+    },
+    deathsLoaded: Death[];
+    mapLoaded: Map;
+    teamsLoaded: [];
+    timeElapsed: string;
+}
+
 export interface Match {
     _id: string;
     initializedDate: number;
@@ -48,9 +92,9 @@ export interface Match {
 }
 
 export interface Death {
+    _id: string;
     killerLoaded: User;
     playerLoaded: User;
-    _id: string;
     player: string;
     killer: string;
     playerItem: string;
@@ -59,4 +103,35 @@ export interface Death {
     date: number;
     match: string;
     __v: number;
+}
+
+export type Leaderboard =
+| 'kills'
+| 'xp'
+| 'wins'
+| 'losses';
+
+export interface Punishment {
+    _id: string;
+    punished: string;
+    ip_ban: boolean;
+    type: string;
+    issued: number;
+    expires: number;
+    reason: string;
+    __v: number;
+    active: boolean;
+    punishedLoaded: User;
+}
+
+export interface Rank {
+    _id: string;
+    name: string;
+    priority: number;
+    prefix: string;
+    staff: boolean;
+    __v: number;
+    default: boolean;
+    display: string;
+    permissions: string[];
 }

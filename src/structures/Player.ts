@@ -1,4 +1,5 @@
-import { Death, Match, User } from '../types/Types';
+import { Utilities } from '../client/Utilities';
+import { Death, Match, Rank, User } from '../types/Types';
 
 export class Player {
     user: User;
@@ -9,5 +10,12 @@ export class Player {
         this.user = data.user;
         this.deaths = data.deaths;
         this.matches = data.matches;
+    }
+
+    /**
+     * Get this player's ranks.
+     */
+    async getRanks(): Promise<Rank[]> {
+        return await Utilities.APIRequest(`/mc/player/${this.user.name}/ranks`);
     }
 }

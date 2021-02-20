@@ -1,5 +1,5 @@
 # warzone
-WarzoneMC Api Wrapper. Completely promise based.\
+WarzoneMC Api Wrapper. Completely promise based. Only supports public get methods for now.\
 `Note: The WarzoneMC API is fairly slow. It is not the wrapper.`\
 **This is in no way affiliated with WarzoneMC.**\
 Contact me on Discord `@MrScopes#5548` with any questions, or make an issue. 
@@ -10,6 +10,7 @@ Contact me on Discord `@MrScopes#5548` with any questions, or make an issue.
 - [Install](#install)
 - [Example Usage](#example-usage)
 - [Documentation](#documentation)
+- [Tests](#tests)
 
 <br>
 
@@ -36,81 +37,48 @@ client.getPlayer('MrScopes').then(console.log);
 <br>
 
 # Documentation
+I'll generate docs tomorrow, but you can see the stuff in the code
 
-<br>
-
-## Client
-
-`.getPlayer(input, options)` -> [Promise\<Player>](#player)
-| Option | Description | Default |
-| ------ | ----------- | ------- |
-| simple | Should it not include deaths and matches? | true
-| byUUID | Should it get by UUID instead of username? | false
+# Tests
+check out src/test for the test source code, here's the following being ran:
 ```ts
-.getPlayer('MrScopes')
-.getPlayer('MrScopes', { simple: false })
-.getPlayer('649ddc08-5406-4d15-83ab-c00974a7fee7', { byUUID: true, simple: false })
+    const time = Date.now();
+
+    const player = await client.getPlayer('MrScopes');
+    const killsLb = await client.getLeaderboard('kills', 3);
+    const deaths = await client.getLatestDeaths();
+    const latestMatch = await client.getLatestMatches();
+    const match = await client.getMatch('6005fe237c57a1a36a0b11dc');
+    const ranks = await client.getRanks();
+    const punishments = await client.getLatestPunishments();
+
+    console.log(`
+
+        ${player.user.name} (${(await player.getRanks())[0].name}) has ${player.user.kills} kills.
+        ${killsLb[0].name} is the #1 killer, with ${killsLb[0].kills} kills.
+        ${deaths[0].playerLoaded.name} was killed by ${deaths[0].killerLoaded.name} using ${deaths[0].killerItem}.
+        The current match is on ${latestMatch[0].loadedMap.name}.
+        Match 6005fe237c57a1a36a0b11dc started at ${new Date(match.match.startedDate)} on ${match.mapLoaded.name}.
+        Default rank has ${ranks[0].permissions.length} different permissions.
+        The most recent punishment was ${punishments[0].punishedLoaded.name} being punished for ${punishments[0].reason}.
+
+    `);
+
+    console.log(`All Tests Successfully ran in ${Date.now() - time}ms.`);
 ```
+...
+```
+C:\Users\Drewm\Desktop\projects\warzone>ts-node src/test
 
 
-<br>
+        MrScopes (vip) has 1649 kills.
+        Residents is the #1 killer, with 25178 kills.
+        XxEternalAngelxX was killed by Eraaaks using IRON_SWORD.
+        The current match is on Timeless.
+        Match 6005fe237c57a1a36a0b11dc started at Mon Jan 18 2021 16:31:37 GMT-0500 (Eastern Standard Time) on Electri City.
+        Default rank has 2 different permissions.
+        The most recent punishment was Naruto_HD being punished for Fly.
 
-## Player
-**.user**\
-`{
-    _id: string;
-    name: string;
-    nameLower: string;
-    uuid: string;
-    initialJoinDate: string;
-    lastOnlineDate: string;
-    __v: number;
-    kills: number;
-    deaths: number;
-    wool_destroys: number;
-    losses: number;
-    wins: number;
-    activeTag: string;
-    punishments: string[];
-    tags: string[];
-    ranks: string[];
-    level: number;
-    levelRaw: number;
-    xp: number;
-}`
 
-**.deaths**\
-`{
-    killerLoaded: User;
-    playerLoaded: User;
-    _id: string;
-    player: string;
-    killer: string;
-    playerItem: string;
-    killerItem: string;
-    map: string;
-    date: number;
-    match: string;
-    __v: number;
-}[]`
-
-**.matches**\
-`{
-    _id: string;
-    initializedDate: number;
-    finished: boolean;
-    map: string;
-    __v: number;
-    finishedDate: number;
-    startedDate: number;
-    winningTeam: string;
-    teamMappings: [{
-        _id: string;
-        player: string;
-        team: string;
-    }];
-    losers: string[];
-    winners: string[];
-    deaths: [];
-    chat: [];
-}[]`
+All Tests Successfully ran in 6076ms.
+```
